@@ -7,7 +7,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/posts_cv">
+        android:id="@+id/posts_cv"
+        android:layout_weight="100">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,12 +30,26 @@
                 android:textSize="24sp"
                 android:layout_below="@+id/posts_user_tv"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/posts_id_tv"
-                android:text="id"
-                android:layout_below="@+id/posts_content_tv"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/posts_id_tv"-->
+<!--                android:text="id"-->
+<!--                android:layout_below="@+id/posts_content_tv"/>-->
+
+
+                <ImageView
+                    android:id="@+id/icon_fav"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_post_favorite"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="15dp"
+                    />
+
+
+
+
 
 
         </RelativeLayout>

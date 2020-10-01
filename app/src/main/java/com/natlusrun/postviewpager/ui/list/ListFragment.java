@@ -19,7 +19,9 @@ import com.natlusrun.postviewpager.R;
 import com.natlusrun.postviewpager.adapters.PostsListAdapter;
 import com.natlusrun.postviewpager.data.model.PostModel;
 import com.natlusrun.postviewpager.data.network.MockerService;
+import com.natlusrun.postviewpager.interfaces.OnPostsItemClick;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListFragment extends Fragment {
@@ -28,6 +30,8 @@ public class ListFragment extends Fragment {
     // private TextView postsUser, postsContent;
     private RecyclerView postsListRV;
     private PostsListAdapter postsListAdapter;
+    List<PostModel> postModels;
+    private int position;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,12 +58,30 @@ public class ListFragment extends Fragment {
             @Override
             public void onSuccess(List<PostModel> list) {
                 Log.d(TAG, "onSuccess: " + (list.size()));
+                postModels = new ArrayList<>();
+                postModels = list;
                 postsListAdapter.setPostsList(list);
             }
 
             @Override
             public void onFailure(Throwable t) {
 
+            }
+        });
+
+        postsListAdapter.setOnPostsItemClick(new OnPostsItemClick() {
+            @Override
+            public void onPostsItemViewClick(int position) {
+                App.mockerService.deletePost(postModels.get(position).getId(), new MockerService.MockerPostDeleteCallback() {
+                    @Override
+                    public void onDeleteSuccess(PostModel postModelList) {
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
             }
         });
     }

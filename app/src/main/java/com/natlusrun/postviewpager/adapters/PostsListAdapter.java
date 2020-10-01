@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,12 +56,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         TextView postsUser;
         TextView postsContent;
         TextView postsID;
+        ImageView iconFav;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             postsUser = itemView.findViewById(R.id.posts_user_tv);
             postsContent = itemView.findViewById(R.id.posts_content_tv);
             cardView = itemView.findViewById(R.id.posts_cv);
+            iconFav = itemView.findViewById(R.id.icon_fav);
             //postsID = itemView.findViewById(R.id.posts_id_tv);
 
             itemView.setOnClickListener(new View.OnClickListener() {

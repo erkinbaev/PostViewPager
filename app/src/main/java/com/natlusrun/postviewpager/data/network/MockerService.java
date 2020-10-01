@@ -11,6 +11,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -32,7 +33,6 @@ public class MockerService {
             public void onResponse(Call<List<PostModel>> call, Response<List<PostModel>> response) {
                 if (response.isSuccessful()) {
                     postsCallback.onSuccess(response.body());
-                    Log.d(TAG, "onResponse: " + response.body().get(0).getTitle());
                 }
             }
 
@@ -44,8 +44,39 @@ public class MockerService {
         });
     }
 
+    public void deletePost(Integer id, MockerPostDeleteCallback deleteCallback) {
+        Call<PostModel> call = service.deletePostById(id);
+        call.enqueue(new Callback<PostModel>() {
+            @Override
+            public void onResponse(Call<PostModel> call, Response<PostModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    deleteCallback.onDeleteSuccess(response.body());
+                    Log.d(TAG, "onResponse: deleted" + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostModel> call, Throwable t) {
+                deleteCallback.onFailure(t);
+                Log.d(TAG, "onFailure: failed");
+            }
+
+//            @Override
+//            public void onFailure(Call<PostModel> call, Throwable t) {
+//                deleteCallback.onFailure(t);
+//                Log.d(TAG, "onFailure: failed");
+//            }
+        });
+    }
+
     public interface MockerPostsCallback {
         void onSuccess(List<PostModel> list);
+
+        void onFailure(Throwable t);
+    }
+
+    public interface MockerPostDeleteCallback {
+        void onDeleteSuccess(PostModel postModelList);
 
         void onFailure(Throwable t);
     }
@@ -53,5 +84,10 @@ public class MockerService {
     public interface MockerApi {
         @GET("posts")
         Call<List<PostModel>> getPosts();
+
+        @DELETE("posts/{id}")
+        Call<PostModel> deletePostById(
+                @Path("id") Integer itemId);
     }
+
 }
