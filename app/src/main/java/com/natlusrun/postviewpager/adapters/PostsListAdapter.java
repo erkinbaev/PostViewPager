@@ -66,17 +66,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             iconFav = itemView.findViewById(R.id.icon_fav);
             //postsID = itemView.findViewById(R.id.posts_id_tv);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
                     onPostsItemClick.onPostsItemViewClick(getAdapterPosition());
+                    return true;
                 }
             });
+
         }
 
         @SuppressLint("SetTextI18n")
         public void onPostsBind(PostModel postModel) {
-            postsUser.setText(postModel.getUser().toString());
+            postsUser.setText(postModel.getTitle());
             //postsID.setText(postModel.getId().toString());
             postsContent.setText(postModel.getContent());
         }

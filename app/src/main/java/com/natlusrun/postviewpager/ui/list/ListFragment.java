@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.natlusrun.postviewpager.App;
 import com.natlusrun.postviewpager.R;
@@ -23,6 +24,10 @@ import com.natlusrun.postviewpager.interfaces.OnPostsItemClick;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListFragment extends Fragment {
 
@@ -54,32 +59,33 @@ public class ListFragment extends Fragment {
         postsListAdapter = new PostsListAdapter();
         postsListRV.setAdapter(postsListAdapter);
 
-        App.mockerService.getPostsList(new MockerService.MockerPostsCallback() {
-            @Override
-            public void onSuccess(List<PostModel> list) {
-                Log.d(TAG, "onSuccess: " + (list.size()));
-                postModels = new ArrayList<>();
-                postModels = list;
-                postsListAdapter.setPostsList(list);
-            }
+       MockerService.getInstance().getPostApi().getPosts().enqueue(new Callback<List<PostModel>>() {
+           @Override
+           public void onResponse(Call<List<PostModel>> call, Response<List<PostModel>> response) {
+               postModels = new ArrayList<>();
+               postModels = response.body();
+               postsListAdapter.setPostsList(postModels);
+           }
 
-            @Override
-            public void onFailure(Throwable t) {
+           @Override
+           public void onFailure(Call<List<PostModel>> call, Throwable t) {
 
-            }
-        });
+           }
+       });
+
 
         postsListAdapter.setOnPostsItemClick(new OnPostsItemClick() {
             @Override
             public void onPostsItemViewClick(int position) {
-                App.mockerService.deletePost(postModels.get(position).getId(), new MockerService.MockerPostDeleteCallback() {
+                MockerService.getInstance().getPostApi().deletePostById(postModels.get(position).getId()).enqueue(new Callback<PostModel>() {
                     @Override
-                    public void onDeleteSuccess(PostModel postModelList) {
+                    public void onResponse(Call<PostModel> call, Response<PostModel> response) {
+                        Toast.makeText(getContext(), "deleted", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
-
+                    public void onFailure(Call<PostModel> call, Throwable t) {
+                        Toast.makeText(getContext(), "Not deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
